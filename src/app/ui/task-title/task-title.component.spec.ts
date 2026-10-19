@@ -263,6 +263,60 @@ describe('TaskTitleComponent', () => {
     });
   });
 
+  describe('empty title handling', () => {
+    it('restores previous title when edited value is empty', () => {
+      fixture.componentRef.setInput('value', 'Write report');
+      component.tmpValue.set('');
+      const emitted: any[] = [];
+      component.valueEdited.subscribe((v) => emitted.push(v));
+
+      component.blurred();
+
+      expect(emitted.length).toBe(1);
+      expect(emitted[0].newVal).toBe('Write report');
+      expect(emitted[0].wasChanged).toBe(false);
+      expect(component.tmpValue()).toBe('Write report');
+    });
+
+    it('restores previous title when edited value is whitespace only', () => {
+      fixture.componentRef.setInput('value', 'Write report');
+      component.tmpValue.set('   ');
+      const emitted: any[] = [];
+      component.valueEdited.subscribe((v) => emitted.push(v));
+
+      component.blurred();
+
+      expect(emitted[0].newVal).toBe('Write report');
+      expect(emitted[0].wasChanged).toBe(false);
+      expect(component.tmpValue()).toBe('Write report');
+    });
+
+    it('saves correctly when a normal edit is made', () => {
+      fixture.componentRef.setInput('value', 'A');
+      component.tmpValue.set('  B  ');
+      const emitted: any[] = [];
+      component.valueEdited.subscribe((v) => emitted.push(v));
+
+      component.blurred();
+
+      expect(emitted[0].newVal).toBe('B');
+      expect(emitted[0].wasChanged).toBe(true);
+    });
+
+    it('preserves modEnter submitTrigger when title is emptied', () => {
+      fixture.componentRef.setInput('value', 'Old title');
+      component.tmpValue.set('');
+      (component as any)._submitTrigger = 'modEnter';
+      const emitted: any[] = [];
+      component.valueEdited.subscribe((v) => emitted.push(v));
+
+      component.blurred();
+
+      expect(emitted[0].submitTrigger).toBe('modEnter');
+      expect(emitted[0].newVal).toBe('Old title');
+    });
+  });
+
   describe('handleKeyDown trigger routing', () => {
     const buildKey = (key: string, opts: KeyboardEventInit = {}): KeyboardEvent =>
       new KeyboardEvent('keydown', { key, ...opts });

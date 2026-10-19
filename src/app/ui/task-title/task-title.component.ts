@@ -296,13 +296,15 @@ export class TaskTitleComponent implements OnDestroy {
   private _submit(blurEvent?: FocusEvent): void {
     const previousValue = this.lastExternalValue;
     const cleanVal = this._cleanValue(this.tmpValue());
+    // An emptied title restores the last saved title instead of saving a blank task.
+    const finalVal = cleanVal || previousValue || '';
     const submitTrigger = this._submitTrigger;
-    this.tmpValue.set(cleanVal);
-    this.lastExternalValue = cleanVal;
+    this.tmpValue.set(finalVal);
+    this.lastExternalValue = finalVal;
     this._submitTrigger = TaskTitleComponent._DEFAULT_SUBMIT_TRIGGER;
     this.valueEdited.emit({
-      newVal: cleanVal,
-      wasChanged: cleanVal !== previousValue,
+      newVal: finalVal,
+      wasChanged: finalVal !== previousValue,
       blurEvent,
       submitTrigger,
     });
