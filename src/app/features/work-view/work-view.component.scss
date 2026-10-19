@@ -105,6 +105,15 @@ h2 {
     font-weight: var(--font-weight-medium);
   }
 
+  .is-over-capacity .time-val,
+  .over-capacity {
+    color: var(--color-warning);
+  }
+
+  .over-capacity {
+    white-space: nowrap;
+  }
+
   .no-wrap > mat-icon {
     font-size: 18px;
     width: 18px;

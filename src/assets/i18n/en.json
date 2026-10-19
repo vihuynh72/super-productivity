@@ -3409,6 +3409,7 @@
     "DONE_TASKS": "Completed Tasks",
     "DONE_TASKS_IN_ARCHIVE": "There are currently no completed tasks here, but there are some already archived.",
     "ESTIMATE_REMAINING": "Estimate remaining:",
+    "OVER_CAPACITY": "{{time}} over your workday",
     "FINISH_DAY": "Finish Day",
     "FINISH_DAY_TOOLTIP": "Evaluate your day, move all completed tasks to the archive (optionally) and/or plan your next day.",
     "LATER_TODAY": "Later Today",

@@ -19,6 +19,7 @@
             >
               <div
                 class="item"
+                [class.is-over-capacity]="overCapacityMs() > 0"
                 matTooltip="{{ T.WW.TODAY_REMAINING | translate }} ~{{
                   todayRemainingInProject() | msToString
                 }}"
@@ -34,6 +35,12 @@
                   }}</strong>
                   <mat-icon>hourglass_empty</mat-icon>
                 </span>
+                @if (overCapacityMs() > 0) {
+                  <span class="over-capacity">{{
+                    T.WW.OVER_CAPACITY
+                      | translate: { time: (overCapacityMs() | msToString) }
+                  }}</span>
+                }
               </div>
               <div class="item">
                 <span class="label">{{ T.WW.WORKING_TODAY | translate }}</span>

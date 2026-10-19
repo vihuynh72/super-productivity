@@ -78,6 +78,8 @@ import { CalendarIntegrationService } from '../calendar-integration/calendar-int
 import { PlannerCalendarEventComponent } from '../planner/planner-calendar-event/planner-calendar-event.component';
 import { ScheduleCalendarMapEntry } from '../schedule/schedule.model';
 import { getLaterTodayCalendarEvents } from './get-later-today-calendar-events';
+import { getOverCapacityMs } from './get-over-capacity-ms';
+import { calculateAvailableHours } from '../planner/util/calculate-available-hours';
 import {
   getEndOfTodayTime,
   isLaterTodayEntryUpcoming,
@@ -293,6 +295,19 @@ export class WorkViewComponent implements OnInit, OnDestroy {
   });
   selectedTaskId = this.taskService.selectedTaskId;
   isOnTodayList = toSignal(this.workContextService.isTodayList$, { initialValue: false });
+
+  readonly overCapacityMs = computed(() => {
+    const scheduleCfg = this._globalConfigService.timelineCfg();
+    if (!this.isOnTodayList() || !scheduleCfg?.isWorkStartEndEnabled) {
+      return 0;
+    }
+    const availableMs = calculateAvailableHours(
+      this._dateService.todayStr(),
+      scheduleCfg,
+    );
+    return getOverCapacityMs(this.estimateRemainingToday(), availableMs);
+  });
+
   isDoneHidden = signal(!!localStorage.getItem(LS.DONE_TASKS_HIDDEN));
   isLaterTodayHidden = signal(!!localStorage.getItem(LS.LATER_TODAY_TASKS_HIDDEN));
   isOverdueHidden = signal(!!localStorage.getItem(LS.OVERDUE_TASKS_HIDDEN));
